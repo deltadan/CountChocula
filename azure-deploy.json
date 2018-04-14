@@ -2,85 +2,85 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "CountChocolaDnsName": {
+    "CountChoculaDnsName": {
       "type": "string",
-      "defaultValue": "CountChocoladnsnameupdateme",
+      "defaultValue": "CountChoculadnsnameupdateme",
       "minLength": 1
     }
   },
   "variables": {
-    "CountChocolaVNETPrefix": "192.168.0.0/24",
-    "CountChocolaVNETSubnet1Name": "CountChocola",
-    "CountChocolaVNETSubnet1Prefix": "192.168.0.0/24",
-    "CountChocolaName": "CountChocola",
-    "CountChocolaAdminUserName": "demouser",
-    "CountChocolaAdminPassword": "Password.1!!",
-    "CountChocolaImagePublisher": "MicrosoftWindowsServer",
-    "CountChocolaImageOffer": "WindowsServer",
-    "CountChocolaWindowsOSVersion": "2016-Datacenter",
-    "CountChocolaOSDiskName": "[concat(variables('CountChocolaName'), '-OSDISK')]",
-    "CountChocolaVmSize": "Standard_D2s_v3",
-    "CountChocolaVnetID": "[resourceId('Microsoft.Network/virtualNetworks', 'CountChocolaVNET')]",
-    "CountChocolaSubnetRef": "[concat(variables('CountChocolaVnetID'), '/subnets/', variables('CountChocolaVNETSubnet1Name'))]",
-    "CountChocolaNicName": "[concat(variables('CountChocolaName'), '-NIC')]",
-    "CountChocola-PUBIPName": "[concat(variables('CountChocolaName'), '-PIP')]",
-    "CountChocolaInstallHyperVScriptFolder": ".",
-    "CountChocolaInstallHyperVScriptFileName": "InstallCountChocola.ps1",
-    "CountChocolaInstallHyperVURL": "https://raw.githubusercontent.com/deltadan/CountChocola/master/InstallCountChocola.ps1"
+    "CountChoculaVNETPrefix": "192.168.0.0/24",
+    "CountChoculaVNETSubnet1Name": "CountChocula",
+    "CountChoculaVNETSubnet1Prefix": "192.168.0.0/24",
+    "CountChoculaName": "CountChocula",
+    "CountChoculaAdminUserName": "demouser",
+    "CountChoculaAdminPassword": "Password.1!!",
+    "CountChoculaImagePublisher": "MicrosoftWindowsServer",
+    "CountChoculaImageOffer": "WindowsServer",
+    "CountChoculaWindowsOSVersion": "2016-Datacenter",
+    "CountChoculaOSDiskName": "[concat(variables('CountChoculaName'), '-OSDISK')]",
+    "CountChoculaVmSize": "Standard_D2s_v3",
+    "CountChoculaVnetID": "[resourceId('Microsoft.Network/virtualNetworks', 'CountChoculaVNET')]",
+    "CountChoculaSubnetRef": "[concat(variables('CountChoculaVnetID'), '/subnets/', variables('CountChoculaVNETSubnet1Name'))]",
+    "CountChoculaNicName": "[concat(variables('CountChoculaName'), '-NIC')]",
+    "CountChocula-PUBIPName": "[concat(variables('CountChoculaName'), '-PIP')]",
+    "CountChoculaInstallHyperVScriptFolder": ".",
+    "CountChoculaInstallHyperVScriptFileName": "InstallCountChocula.ps1",
+    "CountChoculaInstallHyperVURL": "https://raw.githubusercontent.com/deltadan/CountChocula/master/InstallCountChocula.ps1"
   },
   "resources": [
     {
-      "name": "CountChocolaVNET",
+      "name": "CountChoculaVNET",
       "type": "Microsoft.Network/virtualNetworks",
       "location": "[resourceGroup().location]",
       "apiVersion": "2016-03-30",
       "dependsOn": [],
       "tags": {
-        "displayName": "CountChocolaVNET"
+        "displayName": "CountChoculaVNET"
       },
       "properties": {
         "addressSpace": {
           "addressPrefixes": [
-            "[variables('CountChocolaVNETPrefix')]"
+            "[variables('CountChoculaVNETPrefix')]"
           ]
         },
         "subnets": [
           {
-            "name": "[variables('CountChocolaVNETSubnet1Name')]",
+            "name": "[variables('CountChoculaVNETSubnet1Name')]",
             "properties": {
-              "addressPrefix": "[variables('CountChocolaVNETSubnet1Prefix')]"
+              "addressPrefix": "[variables('CountChoculaVNETSubnet1Prefix')]"
             }
           }
         ]
       }
     },
     {
-      "name": "[variables('CountChocola-PUBIPName')]",
+      "name": "[variables('CountChocula-PUBIPName')]",
       "type": "Microsoft.Network/publicIPAddresses",
       "location": "[resourceGroup().location]",
       "apiVersion": "2017-10-01",
       "dependsOn": [],
       "tags": {
-        "displayName": "CountChocola-PUBIP"
+        "displayName": "CountChocula-PUBIP"
       },
       "properties": {
         "publicIPAllocationMethod": "Dynamic",
         "dnsSettings": {
-          "domainNameLabel": "[parameters('CountChocolaDnsName')]"
+          "domainNameLabel": "[parameters('CountChoculaDnsName')]"
         }
       }
     },
     {
-      "name": "[variables('CountChocolaNicName')]",
+      "name": "[variables('CountChoculaNicName')]",
       "type": "Microsoft.Network/networkInterfaces",
       "location": "[resourceGroup().location]",
       "apiVersion": "2017-10-01",
       "dependsOn": [
-        "[resourceId('Microsoft.Network/virtualNetworks', 'CountChocolaVNET')]",
-        "[resourceId('Microsoft.Network/publicIPAddresses', variables('CountChocola-PUBIPName'))]"
+        "[resourceId('Microsoft.Network/virtualNetworks', 'CountChoculaVNET')]",
+        "[resourceId('Microsoft.Network/publicIPAddresses', variables('CountChocula-PUBIPName'))]"
       ],
       "tags": {
-        "displayName": "CountChocolaNic"
+        "displayName": "CountChoculaNic"
       },
       "properties": {
         "ipConfigurations": [
@@ -89,10 +89,10 @@
             "properties": {
               "privateIPAllocationMethod": "Dynamic",
               "subnet": {
-                "id": "[variables('CountChocolaSubnetRef')]"
+                "id": "[variables('CountChoculaSubnetRef')]"
               },
               "publicIPAddress": {
-                "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('CountChocola-PUBIPName'))]"
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('CountChocula-PUBIPName'))]"
               }
             }
           }
@@ -100,30 +100,30 @@
       }
     },
     {
-      "name": "[variables('CountChocolaName')]",
+      "name": "[variables('CountChoculaName')]",
       "type": "Microsoft.Compute/virtualMachines",
       "location": "[resourceGroup().location]",
       "apiVersion": "2017-12-01",
       "dependsOn": [
-        "[resourceId('Microsoft.Network/networkInterfaces', variables('CountChocolaNicName'))]"
+        "[resourceId('Microsoft.Network/networkInterfaces', variables('CountChoculaNicName'))]"
       ],
       "tags": {
-        "displayName": "CountChocola"
+        "displayName": "CountChocula"
       },
       "properties": {
         "hardwareProfile": {
-          "vmSize": "[variables('CountChocolaVmSize')]"
+          "vmSize": "[variables('CountChoculaVmSize')]"
         },
         "osProfile": {
-          "computerName": "[variables('CountChocolaName')]",
-          "adminUsername": "[variables('CountChocolaAdminUsername')]",
-          "adminPassword": "[variables('CountChocolaAdminPassword')]"
+          "computerName": "[variables('CountChoculaName')]",
+          "adminUsername": "[variables('CountChoculaAdminUsername')]",
+          "adminPassword": "[variables('CountChoculaAdminPassword')]"
         },
         "storageProfile": {
           "imageReference": {
-            "publisher": "[variables('CountChocolaImagePublisher')]",
-            "offer": "[variables('CountChocolaImageOffer')]",
-            "sku": "[variables('CountChocolaWindowsOSVersion')]",
+            "publisher": "[variables('CountChoculaImagePublisher')]",
+            "offer": "[variables('CountChoculaImageOffer')]",
+            "sku": "[variables('CountChoculaWindowsOSVersion')]",
             "version": "latest"
           },
           "osDisk": {
@@ -134,22 +134,22 @@
         "networkProfile": {
           "networkInterfaces": [
             {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('CountChocolaNicName'))]"
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('CountChoculaNicName'))]"
             }
           ]
         }
       },
       "resources": [
         {
-          "name": "InstallCountChocolaApps",
+          "name": "InstallCountChoculaApps",
           "type": "extensions",
           "location": "[resourceGroup().location]",
           "apiVersion": "2017-12-01",
           "dependsOn": [
-            "[resourceId('Microsoft.Compute/virtualMachines', variables('CountChocolaName'))]"
+            "[resourceId('Microsoft.Compute/virtualMachines', variables('CountChoculaName'))]"
            ],
           "tags": {
-            "displayName": "Install CountChocola Applications"
+            "displayName": "Install CountChocula Applications"
           },
           "properties": {
             "publisher": "Microsoft.Compute",
@@ -158,9 +158,9 @@
             "autoUpgradeMinorVersion": true,
             "settings": {
               "fileUris": [
-                "[variables('CountChocolaInstallHyperVURL')]"
+                "[variables('CountChoculaInstallHyperVURL')]"
               ],
-              "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File ', variables('CountChocolaInstallHyperVScriptFolder'), '/', variables('CountChocolaInstallHyperVScriptFileName'))]"
+              "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File ', variables('CountChoculaInstallHyperVScriptFolder'), '/', variables('CountChoculaInstallHyperVScriptFileName'))]"
             }
           }
         }
