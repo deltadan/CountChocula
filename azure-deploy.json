@@ -13,7 +13,7 @@
     "CountChoculaVNETSubnet1Name": "CountChocula",
     "CountChoculaVNETSubnet1Prefix": "192.168.0.0/24",
     "CountChoculaName": "CountChocula",
-    "CountChoculaAdminUserName": "demouser",
+    "CountChoculaAdminUserName": "stormtrooperio",
     "CountChoculaAdminPassword": "Password.1!!",
     "CountChoculaImagePublisher": "MicrosoftWindowsServer",
     "CountChoculaImageOffer": "WindowsServer",
