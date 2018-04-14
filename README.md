@@ -9,9 +9,9 @@ Use Chocolatey to provison VMs in Azure
     <img src="http://azuredeploy.net/deploybutton.png"/>
 </a>
 
-**Developer's VM**
+# Developer's VM
 
-This deployment will provision an isolated Developers VM with the following software:
+**This deployment will provision an isolated Developers VM with the following software:**
 
 1. Windows 2016
 1. Visual Studio Community with Azure SDK and ASP.NET
