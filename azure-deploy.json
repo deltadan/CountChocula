@@ -1,0 +1,171 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "CountChocolaDnsName": {
+      "type": "string",
+      "defaultValue": "CountChocoladnsnameupdateme",
+      "minLength": 1
+    }
+  },
+  "variables": {
+    "CountChocolaVNETPrefix": "192.168.0.0/24",
+    "CountChocolaVNETSubnet1Name": "CountChocola",
+    "CountChocolaVNETSubnet1Prefix": "192.168.0.0/24",
+    "CountChocolaName": "CountChocola",
+    "CountChocolaAdminUserName": "demouser",
+    "CountChocolaAdminPassword": "Password.1!!",
+    "CountChocolaImagePublisher": "MicrosoftWindowsServer",
+    "CountChocolaImageOffer": "WindowsServer",
+    "CountChocolaWindowsOSVersion": "2016-Datacenter",
+    "CountChocolaOSDiskName": "[concat(variables('CountChocolaName'), '-OSDISK')]",
+    "CountChocolaVmSize": "Standard_D2s_v3",
+    "CountChocolaVnetID": "[resourceId('Microsoft.Network/virtualNetworks', 'CountChocolaVNET')]",
+    "CountChocolaSubnetRef": "[concat(variables('CountChocolaVnetID'), '/subnets/', variables('CountChocolaVNETSubnet1Name'))]",
+    "CountChocolaNicName": "[concat(variables('CountChocolaName'), '-NIC')]",
+    "CountChocola-PUBIPName": "[concat(variables('CountChocolaName'), '-PIP')]",
+    "CountChocolaInstallHyperVScriptFolder": ".",
+    "CountChocolaInstallHyperVScriptFileName": "InstallCountChocola.ps1",
+    "CountChocolaInstallHyperVURL": "https://raw.githubusercontent.com/deltadan/CountChocola/master/InstallCountChocola.ps1"
+  },
+  "resources": [
+    {
+      "name": "CountChocolaVNET",
+      "type": "Microsoft.Network/virtualNetworks",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2016-03-30",
+      "dependsOn": [],
+      "tags": {
+        "displayName": "CountChocolaVNET"
+      },
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [
+            "[variables('CountChocolaVNETPrefix')]"
+          ]
+        },
+        "subnets": [
+          {
+            "name": "[variables('CountChocolaVNETSubnet1Name')]",
+            "properties": {
+              "addressPrefix": "[variables('CountChocolaVNETSubnet1Prefix')]"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "[variables('CountChocola-PUBIPName')]",
+      "type": "Microsoft.Network/publicIPAddresses",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2017-10-01",
+      "dependsOn": [],
+      "tags": {
+        "displayName": "CountChocola-PUBIP"
+      },
+      "properties": {
+        "publicIPAllocationMethod": "Dynamic",
+        "dnsSettings": {
+          "domainNameLabel": "[parameters('CountChocolaDnsName')]"
+        }
+      }
+    },
+    {
+      "name": "[variables('CountChocolaNicName')]",
+      "type": "Microsoft.Network/networkInterfaces",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2017-10-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/virtualNetworks', 'CountChocolaVNET')]",
+        "[resourceId('Microsoft.Network/publicIPAddresses', variables('CountChocola-PUBIPName'))]"
+      ],
+      "tags": {
+        "displayName": "CountChocolaNic"
+      },
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig1",
+            "properties": {
+              "privateIPAllocationMethod": "Dynamic",
+              "subnet": {
+                "id": "[variables('CountChocolaSubnetRef')]"
+              },
+              "publicIPAddress": {
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('CountChocola-PUBIPName'))]"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "[variables('CountChocolaName')]",
+      "type": "Microsoft.Compute/virtualMachines",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2017-12-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/networkInterfaces', variables('CountChocolaNicName'))]"
+      ],
+      "tags": {
+        "displayName": "CountChocola"
+      },
+      "properties": {
+        "hardwareProfile": {
+          "vmSize": "[variables('CountChocolaVmSize')]"
+        },
+        "osProfile": {
+          "computerName": "[variables('CountChocolaName')]",
+          "adminUsername": "[variables('CountChocolaAdminUsername')]",
+          "adminPassword": "[variables('CountChocolaAdminPassword')]"
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "[variables('CountChocolaImagePublisher')]",
+            "offer": "[variables('CountChocolaImageOffer')]",
+            "sku": "[variables('CountChocolaWindowsOSVersion')]",
+            "version": "latest"
+          },
+          "osDisk": {
+            "createOption": "FromImage",
+            "diskSizeGB": 1023
+          }
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('CountChocolaNicName'))]"
+            }
+          ]
+        }
+      },
+      "resources": [
+        {
+          "name": "InstallCountChocolaApps",
+          "type": "extensions",
+          "location": "[resourceGroup().location]",
+          "apiVersion": "2017-12-01",
+          "dependsOn": [
+            "[resourceId('Microsoft.Compute/virtualMachines', variables('CountChocolaName'))]"
+           ],
+          "tags": {
+            "displayName": "Install CountChocola Applications"
+          },
+          "properties": {
+            "publisher": "Microsoft.Compute",
+            "type": "CustomScriptExtension",
+            "typeHandlerVersion": "1.4",
+            "autoUpgradeMinorVersion": true,
+            "settings": {
+              "fileUris": [
+                "[variables('CountChocolaInstallHyperVURL')]"
+              ],
+              "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File ', variables('CountChocolaInstallHyperVScriptFolder'), '/', variables('CountChocolaInstallHyperVScriptFileName'))]"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "outputs": {}
+}
