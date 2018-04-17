@@ -16,3 +16,5 @@ Use Chocolatey to provison VMs in Azure
 1. Visual Studio Code
 1. Git
 1. Google Chrome
+
+Find more information on how to use this deployment <a href=https://buildazure.com/2018/04/17/using-chocolatey-with-azure-vms/>here</a>.
